@@ -1,35 +1,36 @@
 public class Experience {
 
-    private int id;
-    private String name;
-    private ExperienceType type;
-    private Dzongkhag dzongkhag;
-    private Difficulty difficulty;
-    private double price;
-    private float rating;
-    private boolean guideIncluded;
-    private boolean familyFriendly;
+    private final int id;
+    private final String name;
+    private final int minimumAge;
+    private final double durationHours;
+    private final float rating;
+    private final boolean equipmentIncluded;
+    private final String description;
+    private final String specialNote;
+
+    private final DreamExperience properties;
 
     public Experience(
             int id,
             String name,
-            ExperienceType type,
-            Dzongkhag dzongkhag,
-            Difficulty difficulty,
-            double price,
+            int minimumAge,
+            double durationHours,
             float rating,
-            boolean guideIncluded,
-            boolean familyFriendly) {
+            boolean equipmentIncluded,
+            String description,
+            String specialNote,
+            DreamExperience properties) {
 
         this.id = id;
         this.name = name;
-        this.type = type;
-        this.dzongkhag = dzongkhag;
-        this.difficulty = difficulty;
-        this.price = price;
+        this.minimumAge = minimumAge;
+        this.durationHours = durationHours;
         this.rating = rating;
-        this.guideIncluded = guideIncluded;
-        this.familyFriendly = familyFriendly;
+        this.equipmentIncluded = equipmentIncluded;
+        this.description = description;
+        this.specialNote = specialNote;
+        this.properties = properties;
     }
 
     public int getId() {
@@ -40,43 +41,49 @@ public class Experience {
         return name;
     }
 
-    public ExperienceType getType() {
-        return type;
+    public int getMinimumAge() {
+        return minimumAge;
     }
 
-    public Dzongkhag getDzongkhag() {
-        return dzongkhag;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public double getPrice() {
-        return price;
+    public double getDurationHours() {
+        return durationHours;
     }
 
     public float getRating() {
         return rating;
     }
 
-    public boolean isGuideIncluded() {
-        return guideIncluded;
+    public boolean isEquipmentIncluded() {
+        return equipmentIncluded;
     }
 
-    public boolean isFamilyFriendly() {
-        return familyFriendly;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getSpecialNote() {
+        return specialNote;
+    }
+
+    public DreamExperience getProperties() {
+        return properties;
+    }
+
+    public boolean matches(DreamExperience dream) {
+        return properties.matches(dream);
     }
 
     public String getExperienceInformation() {
         return "Experience: " + name
-                + "\nLocation: " + dzongkhag
-                + "\nType: " + type
-                + "\nDifficulty: " + difficulty
-                + "\nPrice: Nu. " + price
+                + "\nID: " + id
+                + "\nMinimum age: " + minimumAge
+                + "\nDuration: " + durationHours + " hours"
                 + "\nRating: " + rating + "/5"
-                + "\nGuide included: " + (guideIncluded ? "Yes" : "No")
-                + "\nFamily friendly: " + (familyFriendly ? "Yes" : "No");
+                + "\nEquipment included: "
+                + (equipmentIncluded ? "Yes" : "No")
+                + "\n" + properties.getInfo()
+                + "\nDescription: " + description
+                + "\nSpecial note: " + specialNote;
     }
 
     @Override
