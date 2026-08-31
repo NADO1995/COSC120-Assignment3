@@ -465,6 +465,124 @@ public class DiscoverDruk {
         return selected;
     }
 
+    public static Traveller getTraveller() {
+
+        String name = getName();
+
+        if (name == null) {
+            return null;
+        }
+
+        String email = getEmail();
+
+        if (email == null) {
+            return null;
+        }
+
+        String phone = getPhone();
+
+        if (phone == null) {
+            return null;
+        }
+
+        return new Traveller(
+                name,
+                email,
+                phone);
+    }
+
+    private static String getName() {
+
+        while (true) {
+
+            String name =
+                    JOptionPane.showInputDialog(
+                            null,
+                            "Enter your name:",
+                            "Traveller Details",
+                            JOptionPane.QUESTION_MESSAGE);
+
+            if (name == null) {
+                return null;
+            }
+
+            name = name.trim();
+
+            if (!name.isEmpty()) {
+                return name;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Name cannot be empty.",
+                    "Invalid Name",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static String getEmail() {
+
+        while (true) {
+
+            String email =
+                    JOptionPane.showInputDialog(
+                            null,
+                            "Enter your email:",
+                            "Traveller Details",
+                            JOptionPane.QUESTION_MESSAGE);
+
+            if (email == null) {
+                return null;
+            }
+
+            email = email.trim();
+
+            if (email.contains("@")
+                    && email.contains(".")
+                    && !email.contains(" ")) {
+
+                return email;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please enter a valid email address.",
+                    "Invalid Email",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static String getPhone() {
+
+        while (true) {
+
+            String phone =
+                    JOptionPane.showInputDialog(
+                            null,
+                            "Enter your phone number:",
+                            "Traveller Details",
+                            JOptionPane.QUESTION_MESSAGE);
+
+            if (phone == null) {
+                return null;
+            }
+
+            phone = phone.trim();
+
+            if (phone.matches(
+                    "[0-9 +()-]{8,20}")) {
+
+                return phone;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Please enter a valid phone number.",
+                    "Invalid Phone",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public static void main(String[] args) {
 
         try {
@@ -501,6 +619,28 @@ public class DiscoverDruk {
             if (selected == null) {
                 return;
             }
+
+            Traveller traveller =
+                    getTraveller();
+
+            if (traveller == null) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Request cancelled.",
+                        "DiscoverDruk",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                return;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Traveller details:\n\n"
+                            + traveller
+                            .getTravellerInformation(),
+                    "DiscoverDruk",
+                    JOptionPane.INFORMATION_MESSAGE);
 
         } catch (IOException exception) {
 
