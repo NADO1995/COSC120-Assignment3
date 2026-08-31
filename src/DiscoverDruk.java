@@ -1,3 +1,5 @@
+import javax.swing.JOptionPane;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -251,6 +253,175 @@ public class DiscoverDruk {
                 new String[0]);
     }
 
+    public static DreamExperience getDreamExperience() {
+
+        DreamExperience dream =
+                new DreamExperience();
+
+        Object[] typeOptions =
+                new Object[
+                        ExperienceType.values().length + 1];
+
+        for (int i = 0;
+             i < ExperienceType.values().length;
+             i++) {
+
+            typeOptions[i] =
+                    ExperienceType.values()[i];
+        }
+
+        typeOptions[typeOptions.length - 1] =
+                "I don't mind";
+
+        Object typeChoice =
+                JOptionPane.showInputDialog(
+                        null,
+                        "What type of experience would you like?",
+                        "DiscoverDruk",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        typeOptions,
+                        typeOptions[0]);
+
+        if (typeChoice == null) {
+            return null;
+        }
+
+        if (typeChoice instanceof ExperienceType) {
+
+            dream.addCriterion(
+                    Filter.TYPE,
+                    typeChoice);
+        }
+
+        Object[] dzongkhagOptions =
+                new Object[
+                        Dzongkhag.values().length + 1];
+
+        for (int i = 0;
+             i < Dzongkhag.values().length;
+             i++) {
+
+            dzongkhagOptions[i] =
+                    Dzongkhag.values()[i];
+        }
+
+        dzongkhagOptions[
+                dzongkhagOptions.length - 1] =
+                "I don't mind";
+
+        Object dzongkhagChoice =
+                JOptionPane.showInputDialog(
+                        null,
+                        "Which Dzongkhag would you prefer?",
+                        "DiscoverDruk",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        dzongkhagOptions,
+                        dzongkhagOptions[0]);
+
+        if (dzongkhagChoice == null) {
+            return null;
+        }
+
+        if (dzongkhagChoice instanceof Dzongkhag) {
+
+            dream.addCriterion(
+                    Filter.DZONGKHAG,
+                    dzongkhagChoice);
+        }
+
+        Object[] difficultyOptions =
+                new Object[
+                        Difficulty.values().length + 1];
+
+        for (int i = 0;
+             i < Difficulty.values().length;
+             i++) {
+
+            difficultyOptions[i] =
+                    Difficulty.values()[i];
+        }
+
+        difficultyOptions[
+                difficultyOptions.length - 1] =
+                "I don't mind";
+
+        Object difficultyChoice =
+                JOptionPane.showInputDialog(
+                        null,
+                        "What difficulty level would you prefer?",
+                        "DiscoverDruk",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        difficultyOptions,
+                        difficultyOptions[0]);
+
+        if (difficultyChoice == null) {
+            return null;
+        }
+
+        if (difficultyChoice instanceof Difficulty) {
+
+            dream.addCriterion(
+                    Filter.DIFFICULTY,
+                    difficultyChoice);
+        }
+
+        while (true) {
+
+            String priceInput =
+                    JOptionPane.showInputDialog(
+                            null,
+                            "Enter your maximum price in Ngultrum.\n"
+                                    + "Leave blank if you don't mind.",
+                            "DiscoverDruk",
+                            JOptionPane.QUESTION_MESSAGE);
+
+            if (priceInput == null) {
+                return null;
+            }
+
+            if (priceInput.isBlank()) {
+                break;
+            }
+
+            try {
+
+                double maximumPrice =
+                        Double.parseDouble(
+                                priceInput.trim());
+
+                if (maximumPrice <= 0) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please enter a price greater than 0.",
+                            "Invalid Price",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    continue;
+                }
+
+                dream.addCriterion(
+                        Filter.MAX_PRICE,
+                        maximumPrice);
+
+                break;
+
+            } catch (NumberFormatException exception) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Please enter a valid number.",
+                        "Invalid Price",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        return dream;
+    }
+
     public static void main(String[] args) {
 
         try {
@@ -265,11 +436,35 @@ public class DiscoverDruk {
                             .getExperiences()
                             .size());
 
+            DreamExperience dream =
+                    getDreamExperience();
+
+            if (dream == null) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Search cancelled.",
+                        "DiscoverDruk",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                return;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Your search preferences are:\n\n"
+                            + dream.getInfo(),
+                    "DiscoverDruk",
+                    JOptionPane.INFORMATION_MESSAGE);
+
         } catch (IOException exception) {
 
-            System.out.println(
-                    "Error loading file: "
-                            + exception.getMessage());
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error loading file:\n"
+                            + exception.getMessage(),
+                    "File Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }
