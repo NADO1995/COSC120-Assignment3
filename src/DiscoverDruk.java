@@ -422,6 +422,49 @@ public class DiscoverDruk {
         return dream;
     }
 
+    public static Experience findExperience(
+            ExperienceRegistry registry,
+            DreamExperience dream) {
+
+        List<Experience> matches =
+                registry.findMatchingExperiences(dream);
+
+        if (matches.isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Sorry, no experiences matched your preferences.",
+                    "No Matches",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            return null;
+        }
+
+        Experience selected =
+                (Experience) JOptionPane.showInputDialog(
+                        null,
+                        "We found " + matches.size()
+                                + " matching experience(s).\n"
+                                + "Please select one:",
+                        "DiscoverDruk",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        matches.toArray(),
+                        matches.get(0));
+
+        if (selected == null) {
+            return null;
+        }
+
+        JOptionPane.showMessageDialog(
+                null,
+                selected.getExperienceInformation(),
+                "Experience Details",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        return selected;
+    }
+
     public static void main(String[] args) {
 
         try {
@@ -450,12 +493,14 @@ public class DiscoverDruk {
                 return;
             }
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Your search preferences are:\n\n"
-                            + dream.getInfo(),
-                    "DiscoverDruk",
-                    JOptionPane.INFORMATION_MESSAGE);
+            Experience selected =
+                    findExperience(
+                            registry,
+                            dream);
+
+            if (selected == null) {
+                return;
+            }
 
         } catch (IOException exception) {
 
