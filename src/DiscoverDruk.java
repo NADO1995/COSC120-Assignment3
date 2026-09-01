@@ -15,20 +15,46 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Author: Tshering Dorji
+ * Unit: COSC120
+ * Project: DiscoverDruk - Bhutan Experience Finder
+ * GitHub: https://github.com/NADO1995/COSC120-Assignment3.git
+ *
+ * This class was developed with reference to the COSC120 lecture notes,
+ * tutorial materials, and sample code provided for the assignment.
+ *
+ * AI assistance:
+ * ChatGPT was used to help understand the assignment requirements,
+ * review and debug the file handling, search, validation and GUI logic,
+ * and improve code clarity and documentation.
+ */
 public class DiscoverDruk {
 
+    /**
+     * Loads experience information from the supplied text file
+     * and stores each valid Experience object in an ExperienceRegistry.
+     *
+     * @param filename name of the experience data file
+     * @return registry containing the loaded experiences
+     * @throws IOException if the file cannot be read
+     */
     public static ExperienceRegistry loadExperiences(String filename)
             throws IOException {
 
-        ExperienceRegistry registry = new ExperienceRegistry();
+        ExperienceRegistry registry =
+                new ExperienceRegistry();
 
         try (BufferedReader reader =
-                     new BufferedReader(new FileReader(filename))) {
+                     new BufferedReader(
+                             new FileReader(filename))) {
 
-            String line = reader.readLine();
+            String line =
+                    reader.readLine();
 
             if (line == null) {
-                throw new IOException("The experience file is empty.");
+                throw new IOException(
+                        "The experience file is empty.");
             }
 
             while ((line = reader.readLine()) != null) {
@@ -37,18 +63,23 @@ public class DiscoverDruk {
                     continue;
                 }
 
-                String[] data = splitLine(line);
+                String[] data =
+                        splitLine(line);
 
                 if (data.length != 16) {
+
                     System.out.println(
-                            "Skipping invalid line: " + line);
+                            "Skipping invalid line: "
+                                    + line);
+
                     continue;
                 }
 
                 try {
 
                     int id =
-                            Integer.parseInt(data[0].trim());
+                            Integer.parseInt(
+                                    data[0].trim());
 
                     String name =
                             data[1].trim();
@@ -82,25 +113,32 @@ public class DiscoverDruk {
                                     data[8].trim());
 
                     boolean guideIncluded =
-                            parseYesNo(data[9]);
+                            parseYesNo(
+                                    data[9]);
 
                     boolean equipmentIncluded =
-                            parseYesNo(data[10]);
+                            parseYesNo(
+                                    data[10]);
 
                     boolean familyFriendly =
-                            parseYesNo(data[11]);
+                            parseYesNo(
+                                    data[11]);
 
                     Set<String> seasons =
-                            parseList(data[12]);
+                            parseList(
+                                    data[12]);
 
                     Set<String> features =
-                            parseList(data[13]);
+                            parseList(
+                                    data[13]);
 
                     String description =
-                            removeBrackets(data[14]);
+                            removeBrackets(
+                                    data[14]);
 
                     String specialNote =
-                            removeBrackets(data[15]);
+                            removeBrackets(
+                                    data[15]);
 
                     DreamExperience properties =
                             new DreamExperience();
@@ -161,7 +199,8 @@ public class DiscoverDruk {
                                     specialNote,
                                     properties);
 
-                    registry.addExperience(experience);
+                    registry.addExperience(
+                            experience);
 
                 } catch (IllegalArgumentException exception) {
 
@@ -175,9 +214,18 @@ public class DiscoverDruk {
         return registry;
     }
 
+    /**
+     * Converts yes or no text from the data file
+     * into a boolean value.
+     *
+     * @param text value read from the data file
+     * @return true for yes and false for no
+     * @throws IllegalArgumentException if the value is not yes or no
+     */
     private static boolean parseYesNo(String text) {
 
-        String value = text.trim();
+        String value =
+                text.trim();
 
         if (value.equalsIgnoreCase("yes")) {
             return true;
@@ -192,6 +240,13 @@ public class DiscoverDruk {
                         + text);
     }
 
+    /**
+     * Converts list-like text from the data file
+     * into a Set of Strings.
+     *
+     * @param text list value surrounded by square brackets
+     * @return set containing the individual items
+     */
     private static Set<String> parseList(String text) {
 
         Set<String> items =
@@ -202,6 +257,7 @@ public class DiscoverDruk {
 
         if (value.equalsIgnoreCase("NA")
                 || value.isBlank()) {
+
             return items;
         }
 
@@ -209,6 +265,7 @@ public class DiscoverDruk {
                 value.split(";");
 
         for (String part : parts) {
+
             items.add(
                     part.trim().toLowerCase());
         }
@@ -216,6 +273,12 @@ public class DiscoverDruk {
         return items;
     }
 
+    /**
+     * Removes surrounding square brackets from a text value.
+     *
+     * @param text value read from the data file
+     * @return text without surrounding square brackets
+     */
     private static String removeBrackets(String text) {
 
         String value =
@@ -232,6 +295,13 @@ public class DiscoverDruk {
         return value;
     }
 
+    /**
+     * Splits one line of the data file into separate fields.
+     * Commas inside square brackets are kept as part of the field.
+     *
+     * @param line one complete line from the data file
+     * @return array containing the separated fields
+     */
     private static String[] splitLine(String line) {
 
         List<String> parts =
@@ -240,7 +310,8 @@ public class DiscoverDruk {
         StringBuilder currentPart =
                 new StringBuilder();
 
-        boolean insideBrackets = false;
+        boolean insideBrackets =
+                false;
 
         for (char character :
                 line.toCharArray()) {
@@ -263,7 +334,8 @@ public class DiscoverDruk {
 
             } else {
 
-                currentPart.append(character);
+                currentPart.append(
+                        character);
             }
         }
 
@@ -274,6 +346,13 @@ public class DiscoverDruk {
                 new String[0]);
     }
 
+    /**
+     * Displays the experience search form and collects
+     * the user's search preferences.
+     *
+     * @return a DreamExperience containing the selected criteria,
+     * or null if the user cancels
+     */
     public static DreamExperience getDreamExperience() {
 
         Object[] typeOptions =
@@ -332,12 +411,23 @@ public class DiscoverDruk {
         JComboBox<String> seasonBox =
                 new JComboBox<>(seasonOptions);
 
-        typeBox.setSelectedItem("I don't mind");
-        dzongkhagBox.setSelectedItem("I don't mind");
-        difficultyBox.setSelectedItem("I don't mind");
-        guideBox.setSelectedItem("I don't mind");
-        familyBox.setSelectedItem("I don't mind");
-        seasonBox.setSelectedItem("I don't mind");
+        typeBox.setSelectedItem(
+                "I don't mind");
+
+        dzongkhagBox.setSelectedItem(
+                "I don't mind");
+
+        difficultyBox.setSelectedItem(
+                "I don't mind");
+
+        guideBox.setSelectedItem(
+                "I don't mind");
+
+        familyBox.setSelectedItem(
+                "I don't mind");
+
+        seasonBox.setSelectedItem(
+                "I don't mind");
 
         JTextField featuresField =
                 new JTextField();
@@ -426,7 +516,9 @@ public class DiscoverDruk {
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.PLAIN_MESSAGE);
 
-            if (result != JOptionPane.OK_OPTION) {
+            if (result
+                    != JOptionPane.OK_OPTION) {
+
                 return null;
             }
 
@@ -467,7 +559,9 @@ public class DiscoverDruk {
             }
 
             String ageText =
-                    ageField.getText().trim();
+                    ageField
+                            .getText()
+                            .trim();
 
             if (ageText.isEmpty()) {
 
@@ -483,9 +577,11 @@ public class DiscoverDruk {
             try {
 
                 int age =
-                        Integer.parseInt(ageText);
+                        Integer.parseInt(
+                                ageText);
 
-                if (age <= 0 || age > 120) {
+                if (age <= 0
+                        || age > 120) {
 
                     JOptionPane.showMessageDialog(
                             null,
@@ -690,7 +786,8 @@ public class DiscoverDruk {
                     if (!feature.isBlank()) {
 
                         features.add(
-                                feature.trim()
+                                feature
+                                        .trim()
                                         .toLowerCase());
                     }
                 }
@@ -707,6 +804,13 @@ public class DiscoverDruk {
         }
     }
 
+    /**
+     * Creates an array of dropdown options and adds
+     * "I don't mind" as the last option.
+     *
+     * @param values values to place in the dropdown
+     * @return array containing the values and skip option
+     */
     private static Object[] createOptions(
             Object[] values) {
 
@@ -718,22 +822,33 @@ public class DiscoverDruk {
              i < values.length;
              i++) {
 
-            options[i] = values[i];
+            options[i] =
+                    values[i];
         }
 
-        options[options.length - 1] =
+        options[
+                options.length - 1] =
                 "I don't mind";
 
         return options;
     }
 
+    /**
+     * Searches the registry using the user's dream experience
+     * and allows the user to select one matching experience.
+     *
+     * @param registry registry containing available experiences
+     * @param dream user's search requirements
+     * @return selected experience, or null if no selection is made
+     */
     public static Experience findExperience(
             ExperienceRegistry registry,
             DreamExperience dream) {
 
         List<Experience> matches =
-                registry.findMatchingExperiences(
-                        dream);
+                registry
+                        .findMatchingExperiences(
+                                dream);
 
         if (matches.isEmpty()) {
 
@@ -766,155 +881,173 @@ public class DiscoverDruk {
 
         JOptionPane.showMessageDialog(
                 null,
-                selected.getExperienceInformation(),
+                selected
+                        .getExperienceInformation(),
                 "Experience Details",
                 JOptionPane.INFORMATION_MESSAGE);
 
         return selected;
     }
 
+    /**
+     * Collects and validates the traveller's name,
+     * email and phone number using one dialog.
+     *
+     * @return Traveller object, or null if the user cancels
+     */
     public static Traveller getTraveller() {
 
-        String name =
-                getName();
+        JTextField nameField =
+                new JTextField();
 
-        if (name == null) {
-            return null;
-        }
+        JTextField emailField =
+                new JTextField();
 
-        String email =
-                getEmail();
+        JTextField phoneField =
+                new JTextField();
 
-        if (email == null) {
-            return null;
-        }
+        JPanel panel =
+                new JPanel(
+                        new GridLayout(
+                                3,
+                                2,
+                                8,
+                                8));
 
-        String phone =
-                getPhone();
+        panel.add(
+                new JLabel(
+                        "Name:"));
 
-        if (phone == null) {
-            return null;
-        }
+        panel.add(
+                nameField);
 
-        return new Traveller(
-                name,
-                email,
-                phone);
-    }
+        panel.add(
+                new JLabel(
+                        "Email:"));
 
-    private static String getName() {
+        panel.add(
+                emailField);
+
+        panel.add(
+                new JLabel(
+                        "Phone:"));
+
+        panel.add(
+                phoneField);
 
         while (true) {
+
+            int result =
+                    JOptionPane.showConfirmDialog(
+                            null,
+                            panel,
+                            "Traveller Details",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE);
+
+            if (result
+                    != JOptionPane.OK_OPTION) {
+
+                return null;
+            }
 
             String name =
-                    JOptionPane.showInputDialog(
-                            null,
-                            "Enter your name:",
-                            "Traveller Details",
-                            JOptionPane.QUESTION_MESSAGE);
-
-            if (name == null) {
-                return null;
-            }
-
-            name =
-                    name.trim();
-
-            if (!name.isEmpty()) {
-                return name;
-            }
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Name cannot be empty.",
-                    "Invalid Name",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private static String getEmail() {
-
-        while (true) {
+                    nameField
+                            .getText()
+                            .trim();
 
             String email =
-                    JOptionPane.showInputDialog(
-                            null,
-                            "Enter your email:",
-                            "Traveller Details",
-                            JOptionPane.QUESTION_MESSAGE);
-
-            if (email == null) {
-                return null;
-            }
-
-            email =
-                    email.trim();
-
-            if (email.contains("@")
-                    && email.contains(".")
-                    && !email.contains(" ")) {
-
-                return email;
-            }
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please enter a valid email address.",
-                    "Invalid Email",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private static String getPhone() {
-
-        while (true) {
+                    emailField
+                            .getText()
+                            .trim();
 
             String phone =
-                    JOptionPane.showInputDialog(
-                            null,
-                            "Enter your phone number:",
-                            "Traveller Details",
-                            JOptionPane.QUESTION_MESSAGE);
+                    phoneField
+                            .getText()
+                            .trim();
 
-            if (phone == null) {
-                return null;
+            if (name.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Name cannot be empty.",
+                        "Invalid Name",
+                        JOptionPane.ERROR_MESSAGE);
+
+                continue;
             }
 
-            phone =
-                    phone.trim();
+            if (!email.contains("@")
+                    || !email.contains(".")
+                    || email.contains(" ")) {
 
-            if (phone.matches(
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Please enter a valid email address.",
+                        "Invalid Email",
+                        JOptionPane.ERROR_MESSAGE);
+
+                continue;
+            }
+
+            if (!phone.matches(
                     "[0-9 +()-]{8,20}")) {
 
-                return phone;
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Please enter a valid phone number.",
+                        "Invalid Phone",
+                        JOptionPane.ERROR_MESSAGE);
+
+                continue;
             }
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Please enter a valid phone number.",
-                    "Invalid Phone",
-                    JOptionPane.ERROR_MESSAGE);
+            return new Traveller(
+                    name,
+                    email,
+                    phone);
         }
     }
 
+    /**
+     * Writes the traveller information and selected experience
+     * to a formatted text file.
+     *
+     * A numbered filename is used when a request file with the
+     * same experience ID already exists.
+     *
+     * @param traveller traveller making the request
+     * @param selected selected experience
+     * @throws IOException if the request file cannot be written
+     */
     public static void writeRequest(
             Traveller traveller,
             Experience selected)
             throws IOException {
 
         String baseName =
-                "request_" + selected.getId();
+                "request_"
+                        + selected.getId();
 
         String filename =
-                baseName + ".txt";
+                baseName
+                        + ".txt";
 
-        int number = 1;
+        int number =
+                1;
 
-        while (new java.io.File(filename).exists()) {
+        while (new java.io.File(
+                filename).exists()) {
+
             filename =
-                    baseName + "_" + number + ".txt";
+                    baseName
+                            + "_"
+                            + number
+                            + ".txt";
+
             number++;
         }
+
         try (BufferedWriter writer =
                      new BufferedWriter(
                              new FileWriter(
@@ -922,19 +1055,23 @@ public class DiscoverDruk {
 
             writer.write(
                     "DISCOVERDRUK EXPERIENCE REQUEST");
+
             writer.newLine();
 
             writer.write(
                     "================================");
+
             writer.newLine();
             writer.newLine();
 
             writer.write(
                     "Traveller Details");
+
             writer.newLine();
 
             writer.write(
                     "----------------");
+
             writer.newLine();
 
             writer.write(
@@ -946,10 +1083,12 @@ public class DiscoverDruk {
 
             writer.write(
                     "Selected Experience");
+
             writer.newLine();
 
             writer.write(
                     "-------------------");
+
             writer.newLine();
 
             writer.write(
@@ -964,6 +1103,15 @@ public class DiscoverDruk {
         }
     }
 
+    /**
+     * Runs the DiscoverDruk application.
+     *
+     * The method loads the experience data, collects the user's
+     * search requirements, finds matching experiences, collects
+     * traveller information and optionally writes a request file.
+     *
+     * @param args command-line arguments are not used
+     */
     public static void main(String[] args) {
 
         try {
@@ -1032,6 +1180,7 @@ public class DiscoverDruk {
 
             if (choice
                     != JOptionPane.YES_OPTION) {
+
                 return;
             }
 

@@ -1,16 +1,15 @@
 /**
- * File: ExperienceType.java
  * Author: Tshering Dorji
  * Unit: COSC120
  * Project: DiscoverDruk - Bhutan Experience Finder
- * GitHub: https://github.com/NADO1995/COSC120-Assignment3
+ * GitHub: https://github.com/NADO1995/COSC120-Assignment3.git
  *
- * This enum stores the different categories of experiences
- * available in the DiscoverDruk application.
+ * This enum was developed with reference to the COSC120 lecture notes,
+ * tutorial materials, and sample code provided for the assignment.
  *
- * AI Assistance:
- * ChatGPT was used to assist with selecting suitable experience
- * categories and understanding the use of enums and switch expressions.
+ * AI assistance:
+ * ChatGPT was used to help understand the assignment requirements,
+ * review the enum structure, and improve code clarity and documentation.
  */
 public enum ExperienceType {
 
@@ -26,12 +25,13 @@ public enum ExperienceType {
     PHOTOGRAPHY;
 
     /**
-     * Returns a user-friendly name for each experience type.
+     * Returns a readable name for each experience type.
      *
-     * @return formatted name of the experience type
+     * @return the readable experience type
      */
     @Override
     public String toString() {
+
         return switch (this) {
             case TREKKING -> "Trekking";
             case RAFTING -> "River Rafting";
