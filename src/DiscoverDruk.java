@@ -1,7 +1,9 @@
 import javax.swing.JOptionPane;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -583,6 +585,58 @@ public class DiscoverDruk {
         }
     }
 
+    public static void writeRequest(
+            Traveller traveller,
+            Experience selected)
+            throws IOException {
+
+        String filename =
+                "request_" + selected.getId() + ".txt";
+
+        try (BufferedWriter writer =
+                     new BufferedWriter(
+                             new FileWriter(filename))) {
+
+            writer.write(
+                    "DISCOVERDRUK EXPERIENCE REQUEST");
+            writer.newLine();
+
+            writer.write(
+                    "================================");
+            writer.newLine();
+            writer.newLine();
+
+            writer.write(
+                    "Traveller Details");
+            writer.newLine();
+
+            writer.write(
+                    "----------------");
+            writer.newLine();
+
+            writer.write(
+                    traveller.getTravellerInformation());
+            writer.newLine();
+            writer.newLine();
+
+            writer.write(
+                    "Selected Experience");
+            writer.newLine();
+
+            writer.write(
+                    "-------------------");
+            writer.newLine();
+
+            writer.write(
+                    selected.getExperienceInformation());
+            writer.newLine();
+            writer.newLine();
+
+            writer.write(
+                    "Thank you for using DiscoverDruk.");
+        }
+    }
+
     public static void main(String[] args) {
 
         try {
@@ -642,11 +696,32 @@ public class DiscoverDruk {
                     "DiscoverDruk",
                     JOptionPane.INFORMATION_MESSAGE);
 
+            int choice =
+                    JOptionPane.showConfirmDialog(
+                            null,
+                            "Would you like to save this experience request?",
+                            "DiscoverDruk",
+                            JOptionPane.YES_NO_OPTION);
+
+            if (choice != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            writeRequest(
+                    traveller,
+                    selected);
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Your experience request has been saved successfully.",
+                    "DiscoverDruk",
+                    JOptionPane.INFORMATION_MESSAGE);
+
         } catch (IOException exception) {
 
             JOptionPane.showMessageDialog(
                     null,
-                    "Error loading file:\n"
+                    "File error:\n"
                             + exception.getMessage(),
                     "File Error",
                     JOptionPane.ERROR_MESSAGE);
