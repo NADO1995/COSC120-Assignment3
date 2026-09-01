@@ -1,5 +1,10 @@
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
+import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -113,8 +118,20 @@ public class DiscoverDruk {
                             difficulty);
 
                     properties.addCriterion(
-                            Filter.MAX_PRICE,
+                            Filter.MINIMUM_AGE,
+                            minimumAge);
+
+                    properties.addCriterion(
+                            Filter.DURATION,
+                            durationHours);
+
+                    properties.addCriterion(
+                            Filter.PRICE,
                             price);
+
+                    properties.addCriterion(
+                            Filter.RATING,
+                            rating);
 
                     properties.addCriterion(
                             Filter.GUIDE_INCLUDED,
@@ -123,6 +140,10 @@ public class DiscoverDruk {
                     properties.addCriterion(
                             Filter.FAMILY_FRIENDLY,
                             familyFriendly);
+
+                    properties.addCriterion(
+                            Filter.SEASON,
+                            seasons);
 
                     properties.addCriterion(
                             Filter.FEATURES,
@@ -181,7 +202,6 @@ public class DiscoverDruk {
 
         if (value.equalsIgnoreCase("NA")
                 || value.isBlank()) {
-
             return items;
         }
 
@@ -189,7 +209,6 @@ public class DiscoverDruk {
                 value.split(";");
 
         for (String part : parts) {
-
             items.add(
                     part.trim().toLowerCase());
         }
@@ -257,171 +276,448 @@ public class DiscoverDruk {
 
     public static DreamExperience getDreamExperience() {
 
-        DreamExperience dream =
-                new DreamExperience();
-
         Object[] typeOptions =
-                new Object[
-                        ExperienceType.values().length + 1];
-
-        for (int i = 0;
-             i < ExperienceType.values().length;
-             i++) {
-
-            typeOptions[i] =
-                    ExperienceType.values()[i];
-        }
-
-        typeOptions[typeOptions.length - 1] =
-                "I don't mind";
-
-        Object typeChoice =
-                JOptionPane.showInputDialog(
-                        null,
-                        "What type of experience would you like?",
-                        "DiscoverDruk",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        typeOptions,
-                        typeOptions[0]);
-
-        if (typeChoice == null) {
-            return null;
-        }
-
-        if (typeChoice instanceof ExperienceType) {
-
-            dream.addCriterion(
-                    Filter.TYPE,
-                    typeChoice);
-        }
+                createOptions(
+                        ExperienceType.values());
 
         Object[] dzongkhagOptions =
-                new Object[
-                        Dzongkhag.values().length + 1];
-
-        for (int i = 0;
-             i < Dzongkhag.values().length;
-             i++) {
-
-            dzongkhagOptions[i] =
-                    Dzongkhag.values()[i];
-        }
-
-        dzongkhagOptions[
-                dzongkhagOptions.length - 1] =
-                "I don't mind";
-
-        Object dzongkhagChoice =
-                JOptionPane.showInputDialog(
-                        null,
-                        "Which Dzongkhag would you prefer?",
-                        "DiscoverDruk",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        dzongkhagOptions,
-                        dzongkhagOptions[0]);
-
-        if (dzongkhagChoice == null) {
-            return null;
-        }
-
-        if (dzongkhagChoice instanceof Dzongkhag) {
-
-            dream.addCriterion(
-                    Filter.DZONGKHAG,
-                    dzongkhagChoice);
-        }
+                createOptions(
+                        Dzongkhag.values());
 
         Object[] difficultyOptions =
-                new Object[
-                        Difficulty.values().length + 1];
+                createOptions(
+                        Difficulty.values());
 
-        for (int i = 0;
-             i < Difficulty.values().length;
-             i++) {
+        String[] yesNoOptions = {
+                "Yes",
+                "No",
+                "I don't mind"
+        };
 
-            difficultyOptions[i] =
-                    Difficulty.values()[i];
-        }
+        String[] seasonOptions = {
+                "Spring",
+                "Summer",
+                "Autumn",
+                "Winter",
+                "I don't mind"
+        };
 
-        difficultyOptions[
-                difficultyOptions.length - 1] =
-                "I don't mind";
+        JComboBox<Object> typeBox =
+                new JComboBox<>(typeOptions);
 
-        Object difficultyChoice =
-                JOptionPane.showInputDialog(
-                        null,
-                        "What difficulty level would you prefer?",
-                        "DiscoverDruk",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        difficultyOptions,
-                        difficultyOptions[0]);
+        JComboBox<Object> dzongkhagBox =
+                new JComboBox<>(dzongkhagOptions);
 
-        if (difficultyChoice == null) {
-            return null;
-        }
+        JComboBox<Object> difficultyBox =
+                new JComboBox<>(difficultyOptions);
 
-        if (difficultyChoice instanceof Difficulty) {
+        JTextField ageField =
+                new JTextField();
 
-            dream.addCriterion(
-                    Filter.DIFFICULTY,
-                    difficultyChoice);
-        }
+        JTextField durationField =
+                new JTextField();
+
+        JTextField priceField =
+                new JTextField();
+
+        JTextField ratingField =
+                new JTextField();
+
+        JComboBox<String> guideBox =
+                new JComboBox<>(yesNoOptions);
+
+        JComboBox<String> familyBox =
+                new JComboBox<>(yesNoOptions);
+
+        JComboBox<String> seasonBox =
+                new JComboBox<>(seasonOptions);
+
+        JTextField featuresField =
+                new JTextField();
+
+        JPanel panel =
+                new JPanel(
+                        new GridLayout(
+                                11,
+                                2,
+                                8,
+                                8));
+
+        panel.add(
+                new JLabel(
+                        "Experience Type:"));
+
+        panel.add(typeBox);
+
+        panel.add(
+                new JLabel(
+                        "Dzongkhag:"));
+
+        panel.add(dzongkhagBox);
+
+        panel.add(
+                new JLabel(
+                        "Difficulty:"));
+
+        panel.add(difficultyBox);
+
+        panel.add(
+                new JLabel(
+                        "Your Age:"));
+
+        panel.add(ageField);
+
+        panel.add(
+                new JLabel(
+                        "Maximum Duration (hours):"));
+
+        panel.add(durationField);
+
+        panel.add(
+                new JLabel(
+                        "Maximum Price (Nu.):"));
+
+        panel.add(priceField);
+
+        panel.add(
+                new JLabel(
+                        "Minimum Rating (0 - 5):"));
+
+        panel.add(ratingField);
+
+        panel.add(
+                new JLabel(
+                        "Guide Included:"));
+
+        panel.add(guideBox);
+
+        panel.add(
+                new JLabel(
+                        "Family Friendly:"));
+
+        panel.add(familyBox);
+
+        panel.add(
+                new JLabel(
+                        "Season:"));
+
+        panel.add(seasonBox);
+
+        panel.add(
+                new JLabel(
+                        "Features (comma separated):"));
+
+        panel.add(featuresField);
 
         while (true) {
 
-            String priceInput =
-                    JOptionPane.showInputDialog(
+            int result =
+                    JOptionPane.showConfirmDialog(
                             null,
-                            "Enter your maximum price in Ngultrum.\n"
-                                    + "Leave blank if you don't mind.",
-                            "DiscoverDruk",
-                            JOptionPane.QUESTION_MESSAGE);
+                            panel,
+                            "DiscoverDruk - Find Your Bhutan Experience",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE);
 
-            if (priceInput == null) {
+            if (result != JOptionPane.OK_OPTION) {
                 return null;
             }
 
-            if (priceInput.isBlank()) {
-                break;
+            DreamExperience dream =
+                    new DreamExperience();
+
+            Object typeChoice =
+                    typeBox.getSelectedItem();
+
+            if (typeChoice
+                    instanceof ExperienceType) {
+
+                dream.addCriterion(
+                        Filter.TYPE,
+                        typeChoice);
+            }
+
+            Object dzongkhagChoice =
+                    dzongkhagBox.getSelectedItem();
+
+            if (dzongkhagChoice
+                    instanceof Dzongkhag) {
+
+                dream.addCriterion(
+                        Filter.DZONGKHAG,
+                        dzongkhagChoice);
+            }
+
+            Object difficultyChoice =
+                    difficultyBox.getSelectedItem();
+
+            if (difficultyChoice
+                    instanceof Difficulty) {
+
+                dream.addCriterion(
+                        Filter.DIFFICULTY,
+                        difficultyChoice);
+            }
+
+            String ageText =
+                    ageField.getText().trim();
+
+            if (ageText.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Please enter your age.",
+                        "Invalid Age",
+                        JOptionPane.ERROR_MESSAGE);
+
+                continue;
             }
 
             try {
 
-                double maximumPrice =
-                        Double.parseDouble(
-                                priceInput.trim());
+                int age =
+                        Integer.parseInt(ageText);
 
-                if (maximumPrice <= 0) {
+                if (age <= 0 || age > 120) {
 
                     JOptionPane.showMessageDialog(
                             null,
-                            "Please enter a price greater than 0.",
-                            "Invalid Price",
+                            "Please enter a valid age.",
+                            "Invalid Age",
                             JOptionPane.ERROR_MESSAGE);
 
                     continue;
                 }
 
                 dream.addCriterion(
-                        Filter.MAX_PRICE,
-                        maximumPrice);
-
-                break;
+                        Filter.MINIMUM_AGE,
+                        age);
 
             } catch (NumberFormatException exception) {
 
                 JOptionPane.showMessageDialog(
                         null,
-                        "Please enter a valid number.",
-                        "Invalid Price",
+                        "Age must be a whole number.",
+                        "Invalid Age",
                         JOptionPane.ERROR_MESSAGE);
+
+                continue;
             }
+
+            String durationText =
+                    durationField
+                            .getText()
+                            .trim();
+
+            if (!durationText.isEmpty()) {
+
+                try {
+
+                    double duration =
+                            Double.parseDouble(
+                                    durationText);
+
+                    if (duration <= 0) {
+
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Duration must be greater than 0.",
+                                "Invalid Duration",
+                                JOptionPane.ERROR_MESSAGE);
+
+                        continue;
+                    }
+
+                    dream.addCriterion(
+                            Filter.DURATION,
+                            duration);
+
+                } catch (NumberFormatException exception) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please enter a valid duration.",
+                            "Invalid Duration",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    continue;
+                }
+            }
+
+            String priceText =
+                    priceField
+                            .getText()
+                            .trim();
+
+            if (!priceText.isEmpty()) {
+
+                try {
+
+                    double price =
+                            Double.parseDouble(
+                                    priceText);
+
+                    if (price <= 0) {
+
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Price must be greater than 0.",
+                                "Invalid Price",
+                                JOptionPane.ERROR_MESSAGE);
+
+                        continue;
+                    }
+
+                    dream.addCriterion(
+                            Filter.PRICE,
+                            price);
+
+                } catch (NumberFormatException exception) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please enter a valid price.",
+                            "Invalid Price",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    continue;
+                }
+            }
+
+            String ratingText =
+                    ratingField
+                            .getText()
+                            .trim();
+
+            if (!ratingText.isEmpty()) {
+
+                try {
+
+                    float rating =
+                            Float.parseFloat(
+                                    ratingText);
+
+                    if (rating < 0
+                            || rating > 5) {
+
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Rating must be between 0 and 5.",
+                                "Invalid Rating",
+                                JOptionPane.ERROR_MESSAGE);
+
+                        continue;
+                    }
+
+                    dream.addCriterion(
+                            Filter.RATING,
+                            rating);
+
+                } catch (NumberFormatException exception) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Please enter a valid rating.",
+                            "Invalid Rating",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    continue;
+                }
+            }
+
+            String guideChoice =
+                    (String)
+                            guideBox
+                                    .getSelectedItem();
+
+            if (!guideChoice.equals(
+                    "I don't mind")) {
+
+                dream.addCriterion(
+                        Filter.GUIDE_INCLUDED,
+                        guideChoice.equals("Yes"));
+            }
+
+            String familyChoice =
+                    (String)
+                            familyBox
+                                    .getSelectedItem();
+
+            if (!familyChoice.equals(
+                    "I don't mind")) {
+
+                dream.addCriterion(
+                        Filter.FAMILY_FRIENDLY,
+                        familyChoice.equals("Yes"));
+            }
+
+            String seasonChoice =
+                    (String)
+                            seasonBox
+                                    .getSelectedItem();
+
+            if (!seasonChoice.equals(
+                    "I don't mind")) {
+
+                dream.addCriterion(
+                        Filter.SEASON,
+                        seasonChoice);
+            }
+
+            String featuresText =
+                    featuresField
+                            .getText()
+                            .trim();
+
+            if (!featuresText.isEmpty()) {
+
+                Set<String> features =
+                        new LinkedHashSet<>();
+
+                String[] featureParts =
+                        featuresText.split(",");
+
+                for (String feature :
+                        featureParts) {
+
+                    if (!feature.isBlank()) {
+
+                        features.add(
+                                feature.trim()
+                                        .toLowerCase());
+                    }
+                }
+
+                if (!features.isEmpty()) {
+
+                    dream.addCriterion(
+                            Filter.FEATURES,
+                            features);
+                }
+            }
+
+            return dream;
+        }
+    }
+
+    private static Object[] createOptions(
+            Object[] values) {
+
+        Object[] options =
+                new Object[
+                        values.length + 1];
+
+        for (int i = 0;
+             i < values.length;
+             i++) {
+
+            options[i] = values[i];
         }
 
-        return dream;
+        options[options.length - 1] =
+                "I don't mind";
+
+        return options;
     }
 
     public static Experience findExperience(
@@ -429,7 +725,8 @@ public class DiscoverDruk {
             DreamExperience dream) {
 
         List<Experience> matches =
-                registry.findMatchingExperiences(dream);
+                registry.findMatchingExperiences(
+                        dream);
 
         if (matches.isEmpty()) {
 
@@ -443,16 +740,18 @@ public class DiscoverDruk {
         }
 
         Experience selected =
-                (Experience) JOptionPane.showInputDialog(
-                        null,
-                        "We found " + matches.size()
-                                + " matching experience(s).\n"
-                                + "Please select one:",
-                        "DiscoverDruk",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        matches.toArray(),
-                        matches.get(0));
+                (Experience)
+                        JOptionPane.showInputDialog(
+                                null,
+                                "We found "
+                                        + matches.size()
+                                        + " matching experience(s).\n"
+                                        + "Please select one:",
+                                "DiscoverDruk",
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                matches.toArray(),
+                                matches.get(0));
 
         if (selected == null) {
             return null;
@@ -469,19 +768,22 @@ public class DiscoverDruk {
 
     public static Traveller getTraveller() {
 
-        String name = getName();
+        String name =
+                getName();
 
         if (name == null) {
             return null;
         }
 
-        String email = getEmail();
+        String email =
+                getEmail();
 
         if (email == null) {
             return null;
         }
 
-        String phone = getPhone();
+        String phone =
+                getPhone();
 
         if (phone == null) {
             return null;
@@ -508,7 +810,8 @@ public class DiscoverDruk {
                 return null;
             }
 
-            name = name.trim();
+            name =
+                    name.trim();
 
             if (!name.isEmpty()) {
                 return name;
@@ -537,7 +840,8 @@ public class DiscoverDruk {
                 return null;
             }
 
-            email = email.trim();
+            email =
+                    email.trim();
 
             if (email.contains("@")
                     && email.contains(".")
@@ -569,7 +873,8 @@ public class DiscoverDruk {
                 return null;
             }
 
-            phone = phone.trim();
+            phone =
+                    phone.trim();
 
             if (phone.matches(
                     "[0-9 +()-]{8,20}")) {
@@ -590,12 +895,23 @@ public class DiscoverDruk {
             Experience selected)
             throws IOException {
 
-        String filename =
-                "request_" + selected.getId() + ".txt";
+        String baseName =
+                "request_" + selected.getId();
 
+        String filename =
+                baseName + ".txt";
+
+        int number = 1;
+
+        while (new java.io.File(filename).exists()) {
+            filename =
+                    baseName + "_" + number + ".txt";
+            number++;
+        }
         try (BufferedWriter writer =
                      new BufferedWriter(
-                             new FileWriter(filename))) {
+                             new FileWriter(
+                                     filename))) {
 
             writer.write(
                     "DISCOVERDRUK EXPERIENCE REQUEST");
@@ -615,7 +931,9 @@ public class DiscoverDruk {
             writer.newLine();
 
             writer.write(
-                    traveller.getTravellerInformation());
+                    traveller
+                            .getTravellerInformation());
+
             writer.newLine();
             writer.newLine();
 
@@ -628,7 +946,9 @@ public class DiscoverDruk {
             writer.newLine();
 
             writer.write(
-                    selected.getExperienceInformation());
+                    selected
+                            .getExperienceInformation());
+
             writer.newLine();
             writer.newLine();
 
@@ -703,7 +1023,8 @@ public class DiscoverDruk {
                             "DiscoverDruk",
                             JOptionPane.YES_NO_OPTION);
 
-            if (choice != JOptionPane.YES_OPTION) {
+            if (choice
+                    != JOptionPane.YES_OPTION) {
                 return;
             }
 

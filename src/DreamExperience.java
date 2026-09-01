@@ -51,7 +51,7 @@ public class DreamExperience {
                 return false;
             }
 
-            if (filter == Filter.MAX_PRICE) {
+            if (filter == Filter.PRICE) {
 
                 double actualPrice =
                         ((Number) actual).doubleValue();
@@ -60,6 +60,55 @@ public class DreamExperience {
                         ((Number) wanted).doubleValue();
 
                 if (actualPrice > maximumPrice) {
+                    return false;
+                }
+
+            } else if (filter == Filter.MINIMUM_AGE) {
+
+                int minimumAge =
+                        ((Number) actual).intValue();
+
+                int travellerAge =
+                        ((Number) wanted).intValue();
+
+                if (travellerAge < minimumAge) {
+                    return false;
+                }
+
+            } else if (filter == Filter.DURATION) {
+
+                double actualDuration =
+                        ((Number) actual).doubleValue();
+
+                double maximumDuration =
+                        ((Number) wanted).doubleValue();
+
+                if (actualDuration > maximumDuration) {
+                    return false;
+                }
+
+            } else if (filter == Filter.RATING) {
+
+                float actualRating =
+                        ((Number) actual).floatValue();
+
+                float minimumRating =
+                        ((Number) wanted).floatValue();
+
+                if (actualRating < minimumRating) {
+                    return false;
+                }
+
+            } else if (filter == Filter.SEASON) {
+
+                @SuppressWarnings("unchecked")
+                Set<String> actualSeasons =
+                        (Set<String>) actual;
+
+                String wantedSeason =
+                        wanted.toString().toLowerCase();
+
+                if (!actualSeasons.contains(wantedSeason)) {
                     return false;
                 }
 
@@ -78,6 +127,7 @@ public class DreamExperience {
                 }
 
             } else if (!actual.equals(wanted)) {
+
                 return false;
             }
         }
@@ -87,7 +137,8 @@ public class DreamExperience {
 
     public String getInfo() {
 
-        StringBuilder information = new StringBuilder();
+        StringBuilder information =
+                new StringBuilder();
 
         for (Map.Entry<Filter, Object> entry
                 : criteria.entrySet()) {
