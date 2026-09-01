@@ -332,6 +332,13 @@ public class DiscoverDruk {
         JComboBox<String> seasonBox =
                 new JComboBox<>(seasonOptions);
 
+        typeBox.setSelectedItem("I don't mind");
+        dzongkhagBox.setSelectedItem("I don't mind");
+        difficultyBox.setSelectedItem("I don't mind");
+        guideBox.setSelectedItem("I don't mind");
+        familyBox.setSelectedItem("I don't mind");
+        seasonBox.setSelectedItem("I don't mind");
+
         JTextField featuresField =
                 new JTextField();
 
